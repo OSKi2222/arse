@@ -187,7 +187,6 @@ export const ja: Dictionary = {
 
   footer: {
     rights: "全著作権所有。",
-    credits: "デザイン：Agence UBICOM · リニューアル：OSKi_an_Co",
     columns: [
       {
         title: "資料",

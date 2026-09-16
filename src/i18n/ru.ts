@@ -192,7 +192,6 @@ export const ru: Dictionary = {
 
   footer: {
     rights: "Все права защищены.",
-    credits: "Дизайн: Agence UBICOM · Редизайн: OSKi_an_Co",
     columns: [
       {
         title: "Ресурсы",

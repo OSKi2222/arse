@@ -186,7 +186,6 @@ export const zh: Dictionary = {
 
   footer: {
     rights: "版权所有，保留一切权利。",
-    credits: "设计：Agence UBICOM · 改版：OSKi_an_Co",
     columns: [
       {
         title: "资源",

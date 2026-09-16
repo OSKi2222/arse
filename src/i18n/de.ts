@@ -192,7 +192,6 @@ export const de: Dictionary = {
 
   footer: {
     rights: "Alle Rechte vorbehalten.",
-    credits: "Konzeption: Agence UBICOM · Neugestaltung: OSKi_an_Co",
     columns: [
       {
         title: "Ressourcen",

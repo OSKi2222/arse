@@ -192,7 +192,6 @@ export const it: Dictionary = {
 
   footer: {
     rights: "Tutti i diritti riservati.",
-    credits: "Progettazione: Agence UBICOM · Redesign: OSKi_an_Co",
     columns: [
       {
         title: "Risorse",

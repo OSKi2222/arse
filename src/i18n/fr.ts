@@ -192,7 +192,6 @@ export const fr = {
 
   footer: {
     rights: "Tous droits réservés.",
-    credits: "Conception : Agence UBICOM · Refonte : OSKi_an_Co",
     columns: [
       {
         title: "Ressources",

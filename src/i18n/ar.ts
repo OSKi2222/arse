@@ -192,7 +192,6 @@ export const ar: Dictionary = {
 
   footer: {
     rights: "جميع الحقوق محفوظة.",
-    credits: "التصميم: Agence UBICOM · إعادة التصميم: OSKi_an_Co",
     columns: [
       {
         title: "الموارد",
