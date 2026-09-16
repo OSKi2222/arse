@@ -96,10 +96,12 @@ const jsonLd = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL} />
 
-    <!-- Favicons -->
-    <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
-    <link rel="alternate icon" href={withBase("/favicon.ico")} />
-    <link rel="apple-touch-icon" href={withBase("/images/logo-arse-carre.png")} />
+    <!-- Favicons (logo ARSE) -->
+    <link rel="icon" href={withBase("/favicon.ico")} sizes="32x32" />
+    <link rel="icon" href={withBase("/favicon-16x16.png")} type="image/png" sizes="16x16" />
+    <link rel="icon" href={withBase("/favicon-32x32.png")} type="image/png" sizes="32x32" />
+    <link rel="icon" href={withBase("/icon-192.png")} type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href={withBase("/apple-touch-icon.png")} />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
