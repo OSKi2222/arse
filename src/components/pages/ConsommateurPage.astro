@@ -1,0 +1,68 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PageHero from "../PageHero.astro";
+import CtaSection from "../CtaSection.astro";
+import { getLangFromUrl, useTranslations, localizePath, type Lang } from "../../i18n";
+
+const lang: Lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const p = t.pages.consommateur;
+
+const resources = [
+  { label: t.pages.documentation.categories[6].label, href: "/documentation/arretes/" },
+  { label: t.pages.documentation.categories[5].label, href: "/documentation/decisions/" },
+  { label: t.footer.columns[0].links[2].label, href: "/documentation/bulletins/" },
+  { label: t.nav.contact, href: "/contact/" },
+];
+---
+
+<Layout title={p.title} description={p.lede}>
+  <PageHero
+    lang={lang}
+    kicker={p.kicker}
+    title={p.title}
+    lede={p.lede}
+    crumbs={[{ label: t.nav.items[0].label, href: "/" }, { label: p.title }]}
+    image="/images/site/sonabel-poteau.jpg"
+    imageAlt=""
+  />
+
+  <section class="bg-arse-paper px-5 py-20 sm:px-8 md:py-28">
+    <div class="mx-auto max-w-3xl">
+      <p data-scrub-text class="text-[clamp(1.25rem,2.4vw,1.75rem)] font-semibold leading-[1.45] text-arse-ink">
+        {p.intro}
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-white px-5 py-20 sm:px-8 md:py-28">
+    <div class="mx-auto max-w-4xl">
+      <p data-reveal class="text-xs font-semibold uppercase tracking-[0.25em] text-arse-red">
+        <span data-reveal-item>{p.rightsTitle}</span>
+      </p>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2">
+        {p.rights.map((r) => (
+          <div data-stack-item class="flex gap-3 rounded-2xl border border-black/5 bg-arse-paper p-5">
+            <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-arse-red" aria-hidden="true"></span>
+            <p class="text-sm leading-relaxed text-arse-ink/75">{r}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-arse-ink px-5 py-20 text-white sm:px-8 md:py-28">
+    <div data-reveal class="mx-auto max-w-4xl">
+      <p data-reveal-item class="text-xs font-semibold uppercase tracking-[0.25em] text-arse-yellow">{p.resourcesTitle}</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        {resources.map((r) => (
+          <a data-reveal-item href={localizePath(r.href, lang)} class="rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:border-arse-yellow hover:text-arse-yellow">
+            {r.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaSection lang={lang} compact />
+</Layout>

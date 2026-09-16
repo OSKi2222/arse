@@ -1,0 +1,44 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PageHero from "../PageHero.astro";
+import NewsGrid from "../NewsGrid.astro";
+import CtaSection from "../CtaSection.astro";
+import { getLangFromUrl, useTranslations, type Lang } from "../../i18n";
+import type { NewsEntry } from "../../lib/documents";
+import { NEWS_HERO_IMAGES } from "../../lib/site";
+
+interface Props {
+  pageKey: "activite" | "dossier" | "editorial" | "interview";
+  items: NewsEntry[];
+}
+
+const { pageKey, items } = Astro.props;
+const lang: Lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const page = t.pages[pageKey];
+const emptyLabel = "empty" in page ? page.empty : "—";
+---
+
+<Layout title={page.title} description={page.lede}>
+  <PageHero
+    lang={lang}
+    kicker={page.kicker}
+    title={page.title}
+    lede={page.lede}
+    image={NEWS_HERO_IMAGES[pageKey]}
+    imageAlt={page.title}
+    crumbs={[
+      { label: t.nav.items[0].label, href: "/" },
+      { label: t.pages.actualiteHub.title, href: "/actualite/" },
+      { label: page.title },
+    ]}
+  />
+
+  <section class="bg-white px-5 py-20 sm:px-8 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <NewsGrid items={items} emptyLabel={emptyLabel} />
+    </div>
+  </section>
+
+  <CtaSection lang={lang} compact />
+</Layout>

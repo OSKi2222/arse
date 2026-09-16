@@ -1,0 +1,306 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CtaSection from "./CtaSection.astro";
+import { HOME_MEDIA, STATS, PARTNERS } from "../lib/site";
+import { getLangFromUrl, useTranslations, localizePath, type Lang } from "../i18n";
+
+const lang: Lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const missions = t.missions.items.map((m, i) => ({ ...m, image: HOME_MEDIA.missions[i] }));
+const publications = t.publications.items.map((p, i) => ({ ...p, ...HOME_MEDIA.publications[i] }));
+const news = t.news.items.map((n, i) => ({ ...n, ...HOME_MEDIA.news[i] }));
+const stats = STATS.map((s, i) => ({ ...s, label: t.stats.labels[i] }));
+const partnersLoop = [...PARTNERS, ...PARTNERS];
+---
+
+<Layout title={t.meta.title} description={t.meta.description}>
+  <div id="scroll-progress"></div>
+
+  <!-- ================= HERO ================= -->
+  <section data-hero class="relative flex min-h-[100svh] flex-col justify-between overflow-hidden bg-arse-ink px-5 pb-10 pt-32 text-white sm:px-8">
+    <div data-hero-media class="absolute inset-0 overflow-hidden">
+      <img src={HOME_MEDIA.hero} alt={t.hero.imageAlt} class="h-full w-full object-cover" fetchpriority="high" data-no-fade />
+      <div class="absolute inset-0 bg-gradient-to-b from-arse-ink/80 via-arse-ink/70 to-arse-ink"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_40%,transparent_5%,rgba(10,12,14,0.85)_70%)]"></div>
+    </div>
+
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <svg class="absolute inset-x-0 top-[42%] w-full opacity-60" viewBox="0 0 1600 240" fill="none" preserveAspectRatio="none">
+        <path
+          data-wave-path
+          d="M0,120 C 150,20 300,220 480,120 S 780,20 960,120 S 1260,220 1440,120 S 1600,60 1600,120"
+          stroke="url(#waveGrad)"
+          stroke-width="1.5"
+          fill="none"
+        />
+        <defs>
+          <linearGradient id="waveGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#dd3333" />
+            <stop offset="50%" stop-color="#fcd116" />
+            <stop offset="100%" stop-color="#029644" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div
+        data-hero-spotlight
+        class="absolute inset-0 opacity-0"
+        style="background: radial-gradient(420px circle at var(--x, 50%) var(--y, 50%), rgba(252,209,22,0.12), transparent 70%);"
+      >
+      </div>
+    </div>
+
+    <div class="relative z-10 flex flex-1 flex-col justify-center">
+      <div data-hero-kicker class="flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.28em] text-white/55">
+        <span class="relative flex h-2 w-2">
+          <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-arse-green opacity-75"></span>
+          <span class="relative inline-flex h-2 w-2 rounded-full bg-arse-green"></span>
+        </span>
+        {t.hero.kicker}
+      </div>
+
+      <h1 class="mt-8 max-w-none">
+        {t.hero.lines.map((line) => (
+          <span class="hero-line block overflow-hidden py-[0.06em]">
+            <span class="hero-line-inner block text-[clamp(2.75rem,7.4vw,6.5rem)] font-bold leading-[0.96] tracking-[-0.02em]">
+              {line.map((chunk) => (chunk.highlight ? <span class="text-arse-yellow">{chunk.text}</span> : chunk.text))}
+            </span>
+          </span>
+        ))}
+      </h1>
+    </div>
+
+    <div data-hero-footer class="relative z-10 grid gap-8 border-t border-white/10 pt-8 lg:grid-cols-[1.3fr_auto_1fr] lg:items-end">
+      <div class="max-w-lg">
+        <p class="text-white/65">{t.hero.lede}</p>
+        <a
+          href={localizePath("/documentation/rapports/", lang)}
+          data-magnetic
+          class="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-arse-ink"
+        >
+          {t.hero.cta}
+          <span class="i-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="hidden h-full w-px bg-white/10 lg:block" aria-hidden="true"></div>
+
+      <div class="[perspective:900px]">
+        <div data-tilt class="rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur-md [transform-style:preserve-3d]">
+          <p class="text-xs uppercase tracking-wide text-white/45">{t.hero.counterLabel}</p>
+          <p class="mt-2 text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-none text-arse-yellow">
+            <span data-counter data-target="1411376568">0</span>
+            <span class="text-base font-medium text-white/50">kWh</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MANIFESTE ================= -->
+  <section class="bg-arse-paper px-5 py-32 sm:px-8 md:py-48">
+    <div class="mx-auto max-w-5xl">
+      <p data-scrub-text class="text-[clamp(1.5rem,3.4vw,2.9rem)] font-semibold leading-[1.32] tracking-[-0.01em] text-arse-ink">
+        {t.manifesto}
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= MISSIONS — défilement horizontal épinglé (toutes tailles) ================= -->
+  <section data-h-scroll class="relative h-screen overflow-hidden bg-arse-ink text-white">
+    <div
+      data-h-track
+      class="flex h-full items-center gap-6 px-5 sm:px-8 lg:px-[7vw]"
+    >
+      <!--
+        Tous les panneaux (intro comprise) portent `data-h-panel` et sont
+        révélés par le système propre à la galerie. Surtout NE PAS utiliser
+        ici `data-reveal` : ces cibles se retrouveraient dans un
+        ScrollTrigger.batch alors qu'elles vivent à l'intérieur d'une
+        section épinglée, ce qui fausse le calcul de position de tout le
+        lot — y compris des sections situées plus bas dans la page.
+      -->
+      <div data-h-panel class="flex h-[26rem] w-[80vw] shrink-0 flex-col justify-center sm:w-[26rem] lg:h-[32rem] lg:w-[30rem]">
+        <p class="text-xs font-semibold uppercase tracking-[0.25em] text-arse-yellow">{t.missions.kicker}</p>
+        <h2 class="mt-5 text-[clamp(2rem,3.6vw,3.25rem)] font-bold leading-[1.05]">{t.missions.heading}</h2>
+        <p class="mt-5 max-w-sm text-white/55">{t.missions.intro}</p>
+        <p class="mt-8 flex items-center gap-3 text-sm text-white/35">
+          <span class="h-px w-12 bg-white/25"></span>
+          {t.missions.scrollHint}
+        </p>
+      </div>
+
+      {missions.map((m, i) => (
+        <article data-h-panel class="group relative h-[28rem] w-[80vw] shrink-0 overflow-hidden rounded-3xl sm:w-[30rem] lg:h-[32rem] lg:w-[38rem]">
+          <div class="parallax-frame absolute inset-0">
+            <!--
+              Pas de `loading="lazy"` ici : ces images sont déplacées
+              horizontalement par une transformation GSAP à l'intérieur
+              d'une section en `position: fixed` (le pin). Ce n'est pas un
+              vrai scroll, et le chargement paresseux natif du navigateur
+              — basé sur la proximité de défilement réelle — ne détecte
+              jamais que ces cartes "arrivent bientôt" : les images
+              restaient indéfiniment non chargées, même une fois visibles
+              à l'écran.
+            -->
+            <img src={m.image} alt={m.alt} data-parallax="8" class="transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]" />
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-arse-ink via-arse-ink/60 to-transparent"></div>
+          <div class="relative flex h-full flex-col justify-end p-9">
+            <span class="text-xs font-semibold tracking-[0.3em] text-arse-yellow">{String(i + 1).padStart(2, "0")}</span>
+            <h3 class="mt-3 text-2xl font-bold lg:text-4xl">{m.title}</h3>
+            <p class="mt-4 max-w-md leading-relaxed text-white/70">{m.text}</p>
+          </div>
+        </article>
+      ))}
+
+      <div data-h-panel class="flex h-[26rem] w-[70vw] shrink-0 flex-col justify-center sm:w-[22rem] lg:h-[32rem] lg:w-[26rem]">
+        <h3 class="text-2xl font-bold leading-snug">{t.missions.outroTitle}</h3>
+        <p class="mt-4 text-sm text-white/55">{t.missions.outroText}</p>
+        <a
+          href={localizePath("/arse/attributions/", lang)}
+          data-magnetic
+          class="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-arse-yellow px-7 py-3.5 text-sm font-semibold text-arse-ink"
+        >
+          {t.missions.outroCta}
+          <span class="i-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CHIFFRES CLÉS ================= -->
+  <section class="bg-grain relative overflow-hidden bg-arse-slate px-5 py-32 text-white sm:px-8 md:py-44">
+    <div class="mx-auto max-w-6xl">
+      <div data-reveal class="max-w-2xl">
+        <p data-reveal-item class="text-xs font-semibold uppercase tracking-[0.25em] text-arse-yellow">{t.stats.kicker}</p>
+        <h2 data-reveal-item class="mt-4 text-[clamp(1.9rem,3.4vw,3rem)] font-bold leading-tight">{t.stats.heading}</h2>
+      </div>
+
+      <dl class="mt-16 grid gap-y-14 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8">
+        {stats.map((s) => (
+          <div data-stack-item class="border-t border-white/15 pt-6">
+            <dd class="text-[clamp(1.6rem,2.6vw,2.4rem)] font-bold leading-none text-white">
+              <span data-counter data-target={s.value} data-decimals={s.decimals}>0</span>
+              <span class="ml-1 text-base font-semibold text-arse-yellow">{s.unit}</span>
+            </dd>
+            <dt class="mt-3 text-sm leading-snug text-white/55">{s.label}</dt>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- ================= MOT DU PRÉSIDENT ================= -->
+  <!--
+    La photo reste visible pendant que la citation défile à côté, via
+    `position: sticky` — CSS natif, sans dépendance à une géométrie
+    calculée en JS. Un pin GSAP (pinSpacing:false sur un enfant de grid)
+    a été essayé puis abandonné : il se désynchronisait de façon
+    intermittente (position "naturelle" de retour incorrecte après
+    dépin), un cas limite documenté de GSAP ScrollTrigger. `sticky`
+    obtient le même rendu sans ce risque.
+  -->
+  <section class="relative bg-arse-paper lg:min-h-[140vh]">
+    <div class="mx-auto grid max-w-7xl gap-12 px-5 py-24 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:py-0">
+      <!--
+        `sticky` a besoin d'un parent plus grand que lui-même pour avoir de
+        la place où "coller" durant tout le scroll : le wrapper extérieur
+        porte la hauteur (140vh, calée sur la section), l'élément sticky
+        à l'intérieur garde sa hauteur naturelle (juste la photo + le texte).
+      -->
+      <div class="lg:h-[140vh]">
+        <div class="lg:sticky lg:top-28 lg:py-8">
+          <div class="parallax-frame relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-[2rem]">
+            <img src={HOME_MEDIA.president} alt={t.president.imageAlt} data-parallax="6" loading="lazy" />
+          </div>
+          <p class="mt-6 text-xs font-semibold uppercase tracking-[0.25em] text-arse-red">{t.president.kicker}</p>
+          <p class="mt-2 text-sm text-arse-ink/55">{t.president.role}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center lg:min-h-[140vh] lg:py-[30vh]">
+        <blockquote data-scrub-text class="text-[clamp(1.4rem,2.9vw,2.4rem)] font-semibold leading-[1.35] tracking-[-0.01em] text-arse-ink">
+          {t.president.quote}
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PARTENAIRES ================= -->
+  <div class="overflow-hidden border-y border-black/10 bg-arse-cream py-7">
+    <div class="flex w-max animate-marquee items-center gap-14 whitespace-nowrap">
+      {partnersLoop.map((p) => (
+        <span class="flex items-center gap-14 text-lg font-semibold uppercase tracking-wide text-arse-ink/35">
+          {p}
+          <span class="h-1.5 w-1.5 rounded-full bg-arse-red/50" aria-hidden="true"></span>
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- ================= PUBLICATIONS ================= -->
+  <section class="bg-arse-paper px-5 py-32 sm:px-8 md:py-44">
+    <div class="mx-auto max-w-6xl">
+      <div data-reveal class="flex flex-wrap items-end justify-between gap-4">
+        <h2 data-reveal-item class="max-w-xl text-[clamp(1.9rem,3.4vw,3rem)] font-bold leading-tight text-arse-ink">
+          {t.publications.heading}
+        </h2>
+        <a data-reveal-item href={localizePath("/documentation/", lang)} class="text-sm font-semibold text-arse-green-dark hover:underline">
+          {t.publications.cta} <span class="i-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="mt-14 grid grid-cols-2 gap-5 lg:grid-cols-4">
+        {publications.map((p) => (
+          <a href={localizePath(p.href, lang)} data-stack-item class="group block">
+            <div class="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm">
+              <img
+                src={p.image}
+                alt={p.title}
+                loading="lazy"
+                class="aspect-[3/4] w-full object-cover transition-transform duration-[800ms] ease-out group-hover:scale-[1.05]"
+              />
+            </div>
+            <p class="mt-4 text-xs font-semibold uppercase tracking-wider text-arse-red">{p.type}</p>
+            <h3 class="mt-1 text-sm font-semibold leading-snug text-arse-ink group-hover:text-arse-red">{p.title}</h3>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ACTUALITÉS ================= -->
+  <section class="bg-white px-5 py-32 sm:px-8 md:py-44">
+    <div class="mx-auto max-w-6xl">
+      <div data-reveal class="flex flex-wrap items-end justify-between gap-4">
+        <h2 data-reveal-item class="text-[clamp(1.9rem,3.4vw,3rem)] font-bold leading-tight text-arse-ink">{t.news.heading}</h2>
+        <a data-reveal-item href={localizePath("/actualite/activite/", lang)} class="text-sm font-semibold text-arse-green-dark hover:underline">
+          {t.news.cta} <span class="i-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="mt-14 grid gap-6 lg:grid-cols-2">
+        {news.map((n, i) => (
+          <a href={localizePath(n.href, lang)} data-stack-item class:list={["group block", i === 0 && "lg:row-span-2"]}>
+            <div class:list={["parallax-frame relative overflow-hidden rounded-3xl", i === 0 ? "aspect-[4/3] lg:aspect-[4/3.4]" : "aspect-[16/9]"]}>
+              <img src={n.image} alt="" data-parallax="7" loading="lazy" class="transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]" />
+            </div>
+            <div class="mt-5">
+              <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider">
+                <span class="text-arse-red">{n.category}</span>
+                <span class="h-1 w-1 rounded-full bg-arse-ink/25"></span>
+                <time datetime={n.date} class="text-arse-ink/45">{n.dateLabel}</time>
+              </div>
+              <h3 class:list={["mt-2 font-semibold leading-snug text-arse-ink transition-colors group-hover:text-arse-red", i === 0 ? "text-xl lg:text-2xl" : "text-lg"]}>
+                {n.title}
+              </h3>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaSection lang={lang} />
+</Layout>

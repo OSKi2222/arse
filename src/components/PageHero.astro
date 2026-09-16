@@ -1,0 +1,54 @@
+---
+import { localizePath } from "../i18n";
+import type { Lang } from "../i18n";
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  kicker: string;
+  title: string;
+  lede?: string;
+  crumbs: Crumb[];
+  lang: Lang;
+  image?: string;
+  imageAlt?: string;
+}
+
+const { kicker, title, lede, crumbs, lang, image, imageAlt } = Astro.props;
+---
+
+<section data-hero class="relative overflow-hidden bg-arse-ink px-5 pb-16 pt-32 text-white sm:px-8 sm:pb-20 sm:pt-40">
+  {image && (
+    <div data-hero-media class="absolute inset-0 overflow-hidden">
+      <img src={image} alt={imageAlt ?? ""} class="h-full w-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-b from-arse-ink/85 via-arse-ink/80 to-arse-ink"></div>
+    </div>
+  )}
+  {!image && (
+    <div class="pointer-events-none absolute inset-0 opacity-[0.06]" aria-hidden="true" style="background-image:linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px);background-size:56px 56px;"></div>
+  )}
+
+  <div class="relative z-10 mx-auto max-w-5xl">
+    <nav aria-label="Fil d'Ariane" class="flex flex-wrap items-center gap-1.5 text-xs text-white/45">
+      {crumbs.map((c, i) => (
+        <>
+          {i > 0 && <span aria-hidden="true">/</span>}
+          {c.href ? (
+            <a href={localizePath(c.href, lang)} class="transition-colors hover:text-white/80">{c.label}</a>
+          ) : (
+            <span class="text-white/70">{c.label}</span>
+          )}
+        </>
+      ))}
+    </nav>
+
+    <div data-reveal class="mt-6">
+      <p data-reveal-item class="text-xs font-semibold uppercase tracking-[0.25em] text-arse-yellow">{kicker}</p>
+      <h1 data-reveal-item class="mt-4 text-[clamp(2.25rem,5.5vw,3.75rem)] font-bold leading-[1.05]">{title}</h1>
+      {lede && <p data-reveal-item class="mt-5 max-w-2xl text-lg text-white/65">{lede}</p>}
+    </div>
+  </div>
+</section>

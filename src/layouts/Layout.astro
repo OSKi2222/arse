@@ -1,0 +1,132 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE } from "../lib/site";
+import { getLangFromUrl, languages, useTranslations, localizePath, defaultLang, type Lang } from "../i18n";
+import { withBase } from "../lib/base";
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  ogImage?: string;
+}
+
+const lang: Lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Astro.url.pathname inclut le `base` de déploiement (ex. "/arse/" sur
+// GitHub Pages) ; on le retire ici car `path` sert à construire les URLs
+// canoniques/OG contre SITE.url (le futur domaine www.arse.bf), qui n'a pas
+// ce préfixe.
+const deployBase = import.meta.env.BASE_URL.replace(/\/$/, "");
+const rawPathname = Astro.url.pathname;
+const pathnameWithoutBase =
+  deployBase && rawPathname.startsWith(deployBase) ? rawPathname.slice(deployBase.length) || "/" : rawPathname;
+
+const { title, description, path = pathnameWithoutBase, ogImage = "/images/logo-arse-carre.png" } = Astro.props;
+
+const canonicalURL = new URL(path, SITE.url).toString();
+const ogImageURL = new URL(ogImage, SITE.url).toString();
+const isHome = path === "/" || path === `/${lang}/` || path === `/${lang}`;
+const pageTitle = isHome ? `${title} | ${SITE.name}` : `${title} | ${t.site.fullName}`;
+
+// Équivalents linguistiques de la page courante, pour les balises hreflang.
+const basePath = lang === defaultLang ? path : path.replace(`/${lang}`, "") || "/";
+const alternates = (Object.keys(languages) as Lang[]).map((code) => ({
+  code,
+  htmlLang: languages[code].htmlLang,
+  href: new URL(localizePath(basePath, code), SITE.url).toString(),
+}));
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "GovernmentOrganization",
+  name: t.site.fullName,
+  alternateName: SITE.name,
+  url: SITE.url,
+  logo: new URL("/images/logo-arse.png", SITE.url).toString(),
+  image: ogImageURL,
+  description,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: SITE.address.street,
+    postOfficeBoxNumber: SITE.address.postal,
+    addressLocality: SITE.address.city,
+    addressCountry: "BF",
+  },
+  telephone: SITE.phone,
+  email: SITE.email,
+  sameAs: Object.values(SITE.social),
+};
+---
+
+<!doctype html>
+<html lang={languages[lang].htmlLang} dir={languages[lang].dir}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#dd3333" />
+
+    {alternates.map((alt) => <link rel="alternate" hreflang={alt.htmlLang} href={alt.href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(basePath, SITE.url).toString()} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={t.site.fullName} />
+    <meta property="og:locale" content={languages[lang].ogLocale} />
+    {alternates
+      .filter((alt) => alt.code !== lang)
+      .map((alt) => <meta property="og:locale:alternate" content={languages[alt.code].ogLocale} />)}
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <!-- Favicons -->
+    <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
+    <link rel="alternate icon" href={withBase("/favicon.ico")} />
+    <link rel="apple-touch-icon" href={withBase("/images/logo-arse-carre.png")} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      display=optional (et non swap) : la police ne se substitue à la
+      police système qu'au tout premier rendu, jamais après coup. Sans ça,
+      un swap tardif en pleine lecture change la hauteur du texte et fait
+      sauter les sections épinglées au scroll (GSAP ScrollTrigger).
+    -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=optional"
+      rel="stylesheet"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+  </head>
+  <body class="w-full max-w-full font-sans text-arse-ink antialiased">
+    <Header />
+    <div id="swup" class="transition-fade">
+      <slot />
+    </div>
+    <Footer />
+
+    <script>
+      import { initMotion } from "../scripts/motion";
+      initMotion();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PageHero from "../PageHero.astro";
+import CtaSection from "../CtaSection.astro";
+import { getLangFromUrl, useTranslations, type Lang } from "../../i18n";
+
+const lang: Lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const p = t.pages.presentation;
+---
+
+<Layout title={p.title} description={p.lede}>
+  <PageHero
+    lang={lang}
+    kicker={p.kicker}
+    title={p.title}
+    lede={p.lede}
+    crumbs={[{ label: t.nav.items[0].label, href: "/" }, { label: t.nav.items[1].label, href: "/arse/presentation/" }, { label: p.title }]}
+    image="/images/site/pylone.jpg"
+    imageAlt=""
+  />
+
+  <section class="bg-arse-paper px-5 py-20 sm:px-8 md:py-28">
+    <div class="mx-auto max-w-3xl">
+      <p data-scrub-text class="text-[clamp(1.35rem,2.6vw,2rem)] font-semibold leading-[1.4] text-arse-ink">
+        {p.intro}
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-arse-ink px-5 py-20 text-white sm:px-8 md:py-28">
+    <div data-reveal class="mx-auto max-w-3xl text-center">
+      <svg data-reveal-item class="mx-auto h-8 w-8 text-arse-yellow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M7 8c-3 1-4 4-4 7v2h5v-9Zm10 0c-3 1-4 4-4 7v2h5v-9Z" fill="currentColor" />
+      </svg>
+      <blockquote data-reveal-item class="mt-4 text-[clamp(1.3rem,2.6vw,1.9rem)] font-semibold leading-snug">
+        {p.quote}
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="bg-white px-5 py-20 sm:px-8 md:py-28">
+    <div class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2">
+      <div data-reveal>
+        <p data-reveal-item class="text-xs font-semibold uppercase tracking-[0.25em] text-arse-red">{p.contextTitle}</p>
+        <p data-reveal-item class="mt-4 leading-relaxed text-arse-ink/70">{p.context}</p>
+      </div>
+      <div data-reveal>
+        <p data-reveal-item class="text-xs font-semibold uppercase tracking-[0.25em] text-arse-green-dark">{p.visionTitle}</p>
+        <p data-reveal-item class="mt-4 leading-relaxed text-arse-ink/70">{p.vision}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-arse-paper px-5 py-20 sm:px-8 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <p data-reveal class="text-center text-xs font-semibold uppercase tracking-[0.25em] text-arse-yellow">
+        <span data-reveal-item>{p.valuesTitle}</span>
+      </p>
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        {p.values.map((v) => (
+          <span data-stack-item class="rounded-full border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-arse-ink">
+            {v}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaSection lang={lang} compact />
+</Layout>

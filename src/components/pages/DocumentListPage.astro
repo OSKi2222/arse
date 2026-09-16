@@ -1,0 +1,44 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import PageHero from "../PageHero.astro";
+import DocumentGrid from "../DocumentGrid.astro";
+import CtaSection from "../CtaSection.astro";
+import { getLangFromUrl, useTranslations, type Lang } from "../../i18n";
+import type { DocEntry } from "../../lib/documents";
+import { DOC_HERO_IMAGES } from "../../lib/site";
+
+interface Props {
+  pageKey: "rapports" | "bulletins" | "journal" | "lois" | "decrets" | "decisions" | "arretes";
+  docs: DocEntry[];
+}
+
+const { pageKey, docs } = Astro.props;
+const lang: Lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const page = t.pages[pageKey];
+---
+
+<Layout title={page.title} description={page.lede}>
+  <PageHero
+    lang={lang}
+    kicker={page.kicker}
+    title={page.title}
+    lede={page.lede}
+    image={DOC_HERO_IMAGES[pageKey]}
+    imageAlt={page.title}
+    crumbs={[
+      { label: t.nav.items[0].label, href: "/" },
+      { label: t.pages.documentation.title, href: "/documentation/" },
+      { label: page.title },
+    ]}
+  />
+
+  <section class="bg-arse-paper px-5 py-20 sm:px-8 md:py-28">
+    <div class="mx-auto max-w-6xl">
+      <DocumentGrid docs={docs} downloadLabel={t.common.download} />
+      <p class="mt-14 text-center text-xs text-arse-ink/40">{t.common.source}</p>
+    </div>
+  </section>
+
+  <CtaSection lang={lang} compact />
+</Layout>

@@ -1,0 +1,43 @@
+---
+interface NewsItem {
+  title: string;
+  dateLabel: string;
+  date: string;
+  category: string;
+  excerpt?: string;
+  href: string;
+  image?: string;
+}
+
+interface Props {
+  items: NewsItem[];
+  emptyLabel: string;
+}
+
+const { items, emptyLabel } = Astro.props;
+---
+
+{items.length === 0 ? (
+  <div data-reveal class="rounded-3xl border border-dashed border-black/10 bg-white px-8 py-16 text-center">
+    <p data-reveal-item class="text-arse-ink/50">{emptyLabel}</p>
+  </div>
+) : (
+  <div class="grid gap-6 sm:grid-cols-2">
+    {items.map((n) => (
+      <a href={n.href} target={n.href.startsWith("http") ? "_blank" : undefined} rel={n.href.startsWith("http") ? "noopener noreferrer" : undefined} data-stack-item class="group block">
+        <div class="parallax-frame relative aspect-[16/9] overflow-hidden rounded-3xl bg-arse-slate">
+          {n.image && <img src={n.image} alt="" data-parallax="7" loading="lazy" class="transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]" />}
+        </div>
+        <div class="mt-5">
+          <div class="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider">
+            <span class="text-arse-red">{n.category}</span>
+            <span class="h-1 w-1 rounded-full bg-arse-ink/25"></span>
+            <time datetime={n.date} class="text-arse-ink/45">{n.dateLabel}</time>
+          </div>
+          <h3 class="mt-2 text-lg font-semibold leading-snug text-arse-ink transition-colors group-hover:text-arse-red">{n.title}</h3>
+          {n.excerpt && <p class="mt-2 text-sm leading-relaxed text-arse-ink/60">{n.excerpt}</p>}
+        </div>
+      </a>
+    ))}
+  </div>
+)}
