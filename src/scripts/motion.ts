@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Swup from "swup";
 import SwupHeadPlugin from "@swup/head-plugin";
 import SwupPreloadPlugin from "@swup/preload-plugin";
+import { syncHeaderLinks } from "./headerSync";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -531,7 +532,11 @@ export function initMotion() {
     lenis.scrollTo(0, { immediate: true });
   });
 
-  swup.hooks.on("page:view", () => initPage());
+  swup.hooks.on("page:view", () => {
+    initPage();
+    syncHeaderLinks();
+  });
 
   initPage();
+  syncHeaderLinks();
 }

@@ -50,6 +50,7 @@ const socials = [
               <li>
                 <a
                   href={"external" in l && l.external ? l.href : localizePath(l.href, lang)}
+                  data-path={"external" in l && l.external ? undefined : l.href}
                   target={"external" in l && l.external ? "_blank" : undefined}
                   rel={"external" in l && l.external ? "noopener noreferrer" : undefined}
                   class="text-sm text-white/65 hover:text-white"
