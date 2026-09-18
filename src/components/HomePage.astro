@@ -132,7 +132,7 @@ const partnersLoop = [...PARTNERS, ...PARTNERS];
 
       {missions.map((m, i) => (
         <article data-h-panel class="group relative h-[28rem] w-[80vw] shrink-0 overflow-hidden rounded-3xl sm:w-[30rem] lg:h-[32rem] lg:w-[38rem]">
-          <div class="parallax-frame absolute inset-0">
+          <div class="parallax-frame parallax-frame--tight absolute inset-0">
             <!--
               Pas de `loading="lazy"` ici : ces images sont déplacées
               horizontalement par une transformation GSAP à l'intérieur
@@ -142,8 +142,15 @@ const partnersLoop = [...PARTNERS, ...PARTNERS];
               jamais que ces cartes "arrivent bientôt" : les images
               restaient indéfiniment non chargées, même une fois visibles
               à l'écran.
+
+              `--tight` : tampon vertical réduit à 6% (au lieu de 12%) pour
+              que le recadrage automatique (object-fit: cover, ces photos
+              étant plus larges que hautes) ne coupe plus les têtes des
+              personnes en haut de cadre ; `data-parallax` abaissé de 8 à 5
+              en conséquence pour que le déplacement GSAP reste dans ce
+              tampon plus étroit sans révéler les bords.
             -->
-            <img src={m.image} alt={m.alt} data-parallax="8" class="transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]" />
+            <img src={m.image} alt={m.alt} data-parallax="5" class="object-top transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]" />
           </div>
           <div class="absolute inset-0 bg-gradient-to-t from-arse-ink via-arse-ink/60 to-transparent"></div>
           <div class="relative flex h-full flex-col justify-end p-9">

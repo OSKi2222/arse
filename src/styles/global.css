@@ -162,6 +162,20 @@ html.is-changing .transition-fade {
   object-fit: cover;
 }
 
+/*
+ * Variante à tampon réduit (6% au lieu de 12%) pour les photos où le sujet
+ * (visage, tête) se trouve près du haut du cadre : sur ces images, plus
+ * larges que hautes, `object-fit: cover` ne rogne que la largeur, donc le
+ * tampon vertical lui-même (indépendamment de `object-position`) mangeait
+ * ~10% du haut et du bas de la photo — assez pour couper des têtes. Le
+ * `data-parallax` correspondant doit rester ≤ 5 pour tenir dans ce tampon
+ * plus étroit sans révéler les bords du cadre pendant le défilement.
+ */
+.parallax-frame--tight [data-parallax] {
+  inset: -6% 0;
+  height: 112%;
+}
+
 /* Barre de progression de lecture */
 #scroll-progress {
   position: fixed;
