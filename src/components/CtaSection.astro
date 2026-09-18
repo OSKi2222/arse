@@ -11,10 +11,13 @@ const { lang, compact = false } = Astro.props;
 const t = useTranslations(lang);
 ---
 
-<section class:list={["bg-white px-5 sm:px-8", compact ? "pb-24 md:pb-32" : "pb-32 md:pb-44"]}>
+<section class:list={["bg-white px-5 sm:px-8", compact ? "pb-16 md:pb-20" : "pb-20 md:pb-28"]}>
   <div
     data-reveal
-    class="noise-overlay relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-arse-red via-arse-red-dark to-arse-ink px-8 py-20 text-center text-white sm:py-28"
+    class:list={[
+      "noise-overlay relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-arse-red via-arse-red-dark to-arse-ink px-8 text-center text-white",
+      compact ? "py-12 sm:py-16" : "py-16 sm:py-24",
+    ]}
   >
     <h2 data-reveal-item class="relative z-10 mx-auto max-w-3xl text-[clamp(2rem,4vw,3.25rem)] font-bold leading-[1.08]">
       {t.cta.heading}
