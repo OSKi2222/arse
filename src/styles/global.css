@@ -75,6 +75,54 @@ html.is-changing .transition-fade {
     radial-gradient(circle at 85% 80%, rgba(255, 255, 255, 0.05), transparent 40%);
 }
 
+/*
+ * Halos de couleur qui dérivent lentement en fond — deux taches floues
+ * (rouge + vert, les couleurs ARSE) portées par des pseudo-éléments pour
+ * ne jamais interférer avec le contenu (z-index négatif, isolation sur le
+ * conteneur). La section hôte doit être `relative overflow-hidden`.
+ */
+@keyframes drift-glow-a {
+  0%, 100% { transform: translate(-8%, -10%) scale(1); }
+  50% { transform: translate(12%, 14%) scale(1.2); }
+}
+@keyframes drift-glow-b {
+  0%, 100% { transform: translate(10%, 8%) scale(1.1); }
+  50% { transform: translate(-14%, -10%) scale(0.9); }
+}
+.bg-glow-drift {
+  isolation: isolate;
+}
+.bg-glow-drift::before,
+.bg-glow-drift::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 55%;
+  height: 65%;
+  border-radius: 9999px;
+  filter: blur(100px);
+  opacity: 0.28;
+  pointer-events: none;
+}
+.bg-glow-drift::before {
+  top: -15%;
+  left: -10%;
+  background: radial-gradient(circle, var(--color-arse-red), transparent 65%);
+  animation: drift-glow-a 24s ease-in-out infinite;
+}
+.bg-glow-drift::after {
+  bottom: -20%;
+  right: -10%;
+  background: radial-gradient(circle, var(--color-arse-green), transparent 65%);
+  animation: drift-glow-b 28s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg-glow-drift::before,
+  .bg-glow-drift::after {
+    animation: none;
+  }
+}
+
 /* ---------- Performance & fluidité des animations ---------- */
 
 /* Les éléments animés sont promus sur leur propre couche GPU pour éviter
